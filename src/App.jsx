@@ -20,7 +20,7 @@ function App() {
 
 	function onAddValueButtonClick() {
 		if (value) {
-			setList([...list, value]);
+			setList([...list, { id: list.length, value: value }]);
 			setValue('');
 		}
 	}
@@ -52,8 +52,8 @@ function App() {
 				{list.length > 0 ? (
 					<ul className="list">
 						{list.map((item) => (
-							<li key={item} className="list-item">
-								{item}
+							<li key={item.id} className="list-item">
+								{item.value}
 							</li>
 						))}
 					</ul>
