@@ -1,34 +1,68 @@
-// Императивный (доставь мне это отсюда)
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import './App.css';
-import Year from './components/Year.js';
-import Card from './components/Card.js';
+import { useState } from 'react';
 
-// Декларативный (объявление функции)
 function App() {
-	// Декларативный (берём готовое состояние и функцию его изменения из реакта)
-	const [count, setCount] = useState(0);
+	const [value, setValue] = useState('');
+	const [list, setList] = useState([]);
+	const [isError, setIsError] = useState(false);
 
-	// Императивный (функция - верни вот это)
+	function onInputButtonClick() {
+		const promptValue = prompt('Введите значение', '');
+
+		if (promptValue.length < 3) {
+			setIsError(true);
+			setValue('');
+		} else {
+			setIsError(false);
+			setValue(promptValue);
+		}
+	}
+
+	function onAddValueButtonClick() {
+		if (value) {
+			setList([...list, value]);
+			setValue('');
+		}
+	}
+
 	return (
 		<>
-			<div>
-				<a href="https://vite.dev" target="_blank">
-					<img src={viteLogo} className="logo" alt="Vite logo" />
-				</a>
-				<a href="https://react.dev" target="_blank">
-					<img src={reactLogo} className="logo react" alt="React logo" />
-				</a>
+			<h1 className="page-heading">Ввод значения</h1>
+			<p className="no-margin-text">
+				Текущее значение <code>value</code>: "
+				<output className="current-value">{value}</output>"
+			</p>
+			{isError && (
+				<div className="error">Введенное значение должно содержать минимум 3 символа</div>
+			)}
+			<div className="buttons-container">
+				<button className="button" onClick={onInputButtonClick}>
+					Ввести новое
+				</button>
+				<button
+					className="button"
+					onClick={onAddValueButtonClick}
+					disabled={isError || value.length === 0}
+				>
+					Добавить в список
+				</button>
 			</div>
-			<h1>Vite + React</h1>
-			<Card count={count} setCount={setCount} />
-			<p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-			<Year />
+			<div className="list-container">
+				<h2 className="list-heading">Список:</h2>
+				{list.length > 0 ? (
+					<ul className="list">
+						{list.map((item) => (
+							<li key={item} className="list-item">
+								{item}
+							</li>
+						))}
+					</ul>
+				) : (
+					<p className="no-margin-text">Нет добавленных элементов</p>
+				)}
+			</div>
 		</>
 	);
 }
 
-// Декларативный (экспортируй по умолчанию приложение)
 export default App;
